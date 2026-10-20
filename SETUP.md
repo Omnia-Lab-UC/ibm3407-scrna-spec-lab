@@ -1,12 +1,21 @@
 # Setup
 
-Do this **before** the first session. It takes ~30–45 minutes, mostly
-downloads. Everything runs locally — no accounts, no cloud, no GPU required.
-Read this page on GitHub first, then work top to bottom.
+Do this **before** the first session. Read this page on GitHub first, then work
+top to bottom.
 
-You'll install four things: **Ollama** (runs the local model), a **coder model**,
-**opencode** (the AI coding agent), and **OpenSpec** (the spec workflow). Then
-you clone this repo and run one verification command.
+There are **two paths** for the AI coding agent. **This semester everyone uses
+Path A (Claude Code)** through the lab's Claude organization. Path B is kept as a
+fallback. Use it only if you've been told to, or if you can't get Claude access.
+
+| | **Path A — Claude Code** *(default)* | **Path B — local model (Ollama + opencode)** *(fallback)* |
+|---|---|---|
+| **Who** | Everyone in the class this semester | Only if you can't use Claude |
+| **Needs** | Internet + your Claude account | ~8 GB free RAM, no account, works offline |
+| **Time** | ~10–15 minutes | ~30–45 minutes, mostly downloads |
+| **Do** | [Path A](#path-a--claude-code-default), then skip to [step 5](#5-install-openspec) | [Path B](#path-b--local-model-ollama--opencode-fallback) (steps 1–4), then step 5 |
+
+Either way you also install **OpenSpec** (the spec workflow), clone this repo,
+and run one verification command (steps 5–8).
 
 > Install commands move over time. If one fails, check the tool's official docs
 > (linked in each section) — but the commands below were current at the time of
@@ -19,11 +28,64 @@ you clone this repo and run one verification command.
 - **Python 3.11+** and `pip`. Check: `python --version` (or `python3`).
 - **Node.js 20.19+** (needed by OpenSpec). Check: `node --version`.
 - **git**.
-- ~8 GB free RAM for the recommended model (a lighter fallback is noted below).
+- **Path B only:** ~8 GB free RAM for the recommended model (a lighter fallback
+  is noted below).
 
 ---
 
-## 1. Install Ollama
+## Path A — Claude Code (default)
+
+This is the path for the class: you have access to Claude through the lab
+organization. **Skip steps 1–4** (Ollama, model, opencode) entirely.
+
+### A1. Install Claude Code
+
+See **<https://code.claude.com/docs/en/setup>**.
+
+- **macOS / Linux / WSL:**
+  ```bash
+  curl -fsSL https://claude.ai/install.sh | bash
+  ```
+- **Windows (PowerShell):**
+  ```powershell
+  irm https://claude.ai/install.ps1 | iex
+  ```
+- **Windows (CMD):**
+  ```batch
+  curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+  ```
+
+Open a **new** terminal, then verify:
+
+```bash
+claude --version
+```
+
+> If `claude` isn't found, the install directory isn't on your `PATH` yet — see
+> [Troubleshoot installation](https://code.claude.com/docs/en/troubleshoot-install).
+> On Windows, installing [Git for Windows](https://git-scm.com/downloads/win) is
+> recommended so Claude Code can run Bash commands.
+
+### A2. Log in with your lab account
+
+```bash
+claude
+```
+
+Follow the browser prompt and sign in with the **same account you used to
+accept the lab invite**. If you belong to more than one organization, pick the
+lab one. Type `/exit` to leave.
+
+Done — **skip to [step 5](#5-install-openspec)**.
+
+---
+
+## Path B — local model (Ollama + opencode) (fallback)
+
+Use this path only if you **can't** use Claude. Everything runs locally — no
+accounts, no cloud, no GPU required.
+
+### 1. Install Ollama
 
 Ollama runs the local LLM. Get it from **<https://ollama.com/download>**.
 
@@ -39,7 +101,7 @@ Verify it's running:
 ollama --version
 ```
 
-## 2. Pull the coder model and give it a 16k context window
+### 2. Pull the coder model and give it a 16k context window
 
 Pull the recommended model:
 
@@ -73,7 +135,7 @@ You now have a `qwen2.5-coder:7b-16k` model. Use **that** name in opencode below
 > **If opencode complains about context length**, your machine may allow a larger
 > window — bump `num_ctx` to `32768` and rebuild.
 
-## 3. Install opencode
+### 3. Install opencode
 
 opencode is the terminal AI coding agent. See **<https://opencode.ai/docs>**.
 
@@ -92,7 +154,7 @@ Verify:
 opencode --version
 ```
 
-## 4. Point opencode at your local Ollama
+### 4. Point opencode at your local Ollama
 
 Create/edit opencode's config file:
 
@@ -122,7 +184,11 @@ Create/edit opencode's config file:
 Start opencode inside a project with `opencode`, and pick the
 `qwen2.5-coder:7b-16k` model.
 
-## 5. Install OpenSpec
+---
+
+## Both paths: OpenSpec, clone, verify
+
+### 5. Install OpenSpec
 
 OpenSpec is the spec-driven workflow. See
 **<https://github.com/Fission-AI/OpenSpec>**.
@@ -139,7 +205,7 @@ openspec --version
 
 Don't run `openspec init` yet — you'll do that inside the repo in step 7.
 
-## 6. Clone this repo and install Python deps
+### 6. Clone this repo and install Python deps
 
 ```bash
 git clone <this-repo-url> ibm3407-scrna-spec-lab
@@ -154,7 +220,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 7. Initialize OpenSpec
+### 7. Initialize OpenSpec
 
 From inside the repo:
 
@@ -162,9 +228,10 @@ From inside the repo:
 openspec init
 ```
 
-When prompted for your AI tool, choose the one you're using with opencode.
+When prompted for your AI tool, choose **Claude Code** (Path A) or **OpenCode**
+(Path B).
 
-## 8. Verify
+### 8. Verify
 
 ```bash
 make verify
@@ -192,6 +259,10 @@ If you do, you're ready. See [WORKSHOP.md](WORKSHOP.md) for the session steps.
   `pip install -r requirements.txt`?
 - **Fixture not found** — regenerate it:
   `python scripts/generate_synthetic_fixture.py`.
+- **`claude` asks you to pay / says no access (Path A)** — you're logged into
+  the wrong account or org. Run `/logout` inside `claude`, then log in again
+  with the account that accepted the lab invite.
 - **opencode can't reach Ollama (Windows)** — use `127.0.0.1` instead of
   `localhost` (see step 4).
-- **Model too slow / out of memory** — switch to `deepseek-coder:6.7b` (step 2).
+- **Model too slow / out of memory (Path B)** — switch to `deepseek-coder:6.7b`
+  (step 2).

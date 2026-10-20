@@ -3,9 +3,17 @@
 Student-facing steps for the two Friday sessions. Do [SETUP.md](SETUP.md) first;
 run `make verify` and get the OK line before Friday 1.
 
-Throughout, you drive the change through opencode with your local model, using
-OpenSpec's commands. The goal each time: **a spec precise enough that the local
-model implements it correctly**, verified by the tests.
+Throughout, you drive the change through **Claude Code** (`claude`) using
+OpenSpec's commands. (If you set up the fallback Path B, use **opencode** with
+your local model wherever this page says `claude`.)
+
+The goal each time: **a spec precise enough that the model implements it
+correctly**, verified by the tests.
+
+> **A strong model hides weak specs.** Claude will often "fill in" a vague spec
+> on its own and still get the code right. That's not a pass: judge your spec by
+> whether *it* is precise and testable, not by whether Claude got the code right.
+> Keep your change small anyway.
 
 ---
 
@@ -21,7 +29,7 @@ Choose one, or **propose your own** — this list is a floor, not a ceiling. It'
 here so nobody is blocked at the start. Items get harder going down: unsure? take
 the **default**; comfortable with Python? pick further down. Each is **one
 function with one checkable acceptance criterion** — keep your change that small,
-or the local model won't finish it in the session.
+or the model won't finish it in the session.
 
 1. **QC metrics and filtering** — *default.* Compute genes-per-cell and percent
    mitochondrial counts, then filter cells on stated thresholds. Stubs exist in
@@ -53,7 +61,8 @@ Once you've picked, run the cycle:
 > a thinking partner for clarifying requirements, not a required step — skip it
 > when your change is already clear.
 
-4. **Propose your change.** In opencode, e.g. for the default:
+4. **Propose your change.** In your agent (`claude` or `opencode`), e.g. for
+   the default:
    ```
    /opsx:propose add a QC filtering step to scrna/qc.py that computes per-cell
    metrics and filters cells by minimum genes and maximum percent mitochondrial
@@ -67,7 +76,7 @@ Once you've picked, run the cycle:
      default) to see what it must satisfy.
 6. **Revise the spec by hand.** Tighten anything vague. Pin the thresholds and
    say why.
-7. **Apply.** Start `/opsx:apply` and let the local model implement against your
+7. **Apply.** Start `/opsx:apply` and let the model implement against your
    spec.
 
 ## Between sessions
@@ -75,8 +84,7 @@ Once you've picked, run the cycle:
 - Let **apply** finish.
 - Verify: `make verify` and `pytest`. The QC acceptance test in
   `tests/test_qc.py` should now **pass** (it xfails on a fresh `main`).
-- **Close the gaps** the local model left — small fixes are expected with a weak
-  model. If it's badly stuck, you can check out the `solution` branch to keep
+- **Close the gaps** the model left. Small fixes are expected. If it's badly stuck, you can check out the `solution` branch to keep
   moving, but try to finish your own first.
 - **Archive** the finished change: `/opsx:archive`.
 - **Draft a second spec** from a real methods paragraph (bring one from a paper
@@ -92,8 +100,9 @@ Once you've picked, run the cycle:
 3. **Revise** based on the review.
 4. **Apply and verify** the revised change: `/opsx:apply`, then `make verify` and
    `pytest`.
-5. **Short discussion:** what made a spec succeed or fail with a weak local
-   model?
+5. **Short discussion:** what made a spec succeed or fail? Where did Claude
+   succeed *despite* an ambiguous spec, and would a weaker model or a human
+   colleague have read it the same way?
 
 ---
 
@@ -101,4 +110,4 @@ Once you've picked, run the cycle:
 
 **_(explore) →_ propose → audit → revise → apply → verify → archive.** Explore is
 optional; the rest is the loop. The spec is the artifact you're being graded on —
-the code is what a weak model produces from it.
+the code is what the model produces from it.
