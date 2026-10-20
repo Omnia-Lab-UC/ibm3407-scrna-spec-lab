@@ -5,10 +5,20 @@ Guidance for Claude Code (and any AI agent) working in this repository.
 ## What this repo is
 
 A **deliberately over-scaffolded dummy repo** for a graduate spec-driven
-development workshop (course IBM3407, human genomics). Students drive a **local
-LLM via Ollama** (through opencode + OpenSpec) to make small, bounded changes to
-a tiny single-cell RNA-seq (scRNA-seq) analysis. Everything runs **offline on
-student laptops** across macOS / Windows / Linux.
+development workshop (course IBM3407, human genomics). Students drive an AI
+coding agent through OpenSpec to make small, bounded changes to a tiny
+single-cell RNA-seq (scRNA-seq) analysis, on their own laptops across macOS /
+Windows / Linux.
+
+Two agent paths are documented in SETUP.md:
+
+- **Path A — Claude Code (default).** This semester every student uses Claude
+  Code through the lab's Claude organization.
+- **Path B — Ollama + opencode (fallback).** A local LLM that runs fully
+  offline. It's kept in case Claude access isn't available. Don't remove it.
+
+Both paths share OpenSpec, the repo, and `make verify`. Keep both documented and
+working, and keep Path B fully offline.
 
 The analysis is intentionally minimal: two QC functions and one plot. The point
 is *bounded, spec-driven changes* — not a complete pipeline. **Do not expand the
@@ -21,7 +31,7 @@ analysis** beyond the existing stubs.
   test **xfails**. This is the intended state of `main`. Do not "fix" the stubs
   on `main`.
 - **`solution`** — the QC change fully implemented. `tests/test_qc.py` passes
-  here. Reference branch students check out if their local model stalls.
+  here. Reference branch students check out if their model stalls.
 
 When asked to change behavior, be explicit about which branch you're on. A green
 QC test on `main` is a bug; an xfail on `main` is correct.
@@ -83,6 +93,6 @@ fixture, and confirm those exact states.
 - Keep `cellxgene-census` out of `requirements.txt` (comment only). It's heavy;
   the student install must stay light.
 - Keep `SETUP.md` / `WORKSHOP.md` install commands verified against each tool's
-  official docs — Ollama, opencode, and OpenSpec install steps move over time.
+  official docs — Claude Code, Ollama, opencode, and OpenSpec install steps move over time.
 - The synthetic fixture is deterministic (seeded). If you regenerate it, re-run
   the tests and commit the new file.
