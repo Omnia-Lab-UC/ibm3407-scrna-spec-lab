@@ -1,7 +1,8 @@
 # Core install for the workshop. Kept deliberately light so it installs on a
 # mixed-OS class of student laptops, offline-friendly once the wheels are cached.
 #
-# Requires Python >= 3.11.
+# Requires Python 3.12 to 3.14: scanpy/anndata need >= 3.12, and matplotlib 3.10.9
+# and h5py publish no 3.15 wheels yet.
 # Pinned to the versions the repo was built and verified against.
 scanpy==1.12.2
 anndata==0.13.1
